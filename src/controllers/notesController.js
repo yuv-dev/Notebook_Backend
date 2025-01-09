@@ -22,17 +22,15 @@ const addNotes = async (req, res) => {
 const getNotes = async (req, res) => {
   let queryObjectToFind = {};
 
-  for (let key in req.body) {
+  const keyObject = [...req.body, ...req.query, ...req.params];
+
+  for (let key in keyObject) {
     if (key === "username") {
-      //This conditon will ensure that regex doesnt work on username and other users cant get differernt users data
+      //This conditon will ensure that regex doesnt work on username and other similar users cant get differernt users data
       queryObjectToFind[key] = req.body[key];
     } else {
       queryObjectToFind[key] = { $regex: req.body[key], $options: "i" };
     }
-  }
-
-  for (let key in req.query) {
-    queryObjectToFind[key] = { $regex: req.query[key], $options: "i" };
   }
 
   try {
@@ -47,7 +45,8 @@ const getNotes = async (req, res) => {
 
 //Find note by keyword
 const searchNotes = async (req, res) => {
-  const searchPattern = req.params.keyword || req.query.keyword;
+  const searchPattern =
+    req.params.keyword || req.query.keyword || req.params.keyword;
   const queryObjectToFind = {
     $or: [
       { title: { $regex: searchPattern, $options: "i" } },
@@ -70,11 +69,11 @@ const removeNotes = async (req, res) => {
   let queryObjectToFind = { _id: reqNotesId };
 
   try {
-    const Notes = await Noteservice.deleteById(queryObjectToFind);
-    if (!Notes)
+    const Note = await Noteservice.deleteOne(queryObjectToFind);
+    if (!Note)
       return res.status(400).send(response.sendFailed("Notes doesn't Exist"));
 
-    return res.status(200).send(response.sendSuccess("Note Deleted", Notes));
+    return res.status(200).send(response.sendSuccess("Note Deleted", Note));
   } catch (err) {
     return res.status(500).send(response.sendError(err));
   }
@@ -83,21 +82,20 @@ const removeNotes = async (req, res) => {
 //Update Notes
 const updateNotes = async (req, res) => {
   let reqNotesId = req.body.id || req.query.id || req.params.id;
-  let queryObjectToFind = { _id: reqNotesId };
 
   try {
-    const Notes = await Noteservice.findById(queryObjectToFind);
-    if (!Notes) {
+    const Note = await Noteservice.findById(reqNotesId);
+    if (!Note) {
       return res.status(400).send(response.sendFailed("Notes doesn't Exist"));
     }
 
-    Notes.title = req.body.title || Notes.title;
-    Notes.description = req.body.description || Notes.description;
-    Notes.tag = req.body.tag || Notes.tag;
-    const updatedNotes = await Notes.save();
+    Note.title = req.body.title || Notes.title;
+    Note.description = req.body.description || Notes.description;
+    Note.tag = req.body.tag || Notes.tag;
+    const updatedNote = await Notes.save();
     return res
       .status(200)
-      .send(response.sendSuccess("Notes details updated", updatedNotes));
+      .send(response.sendSuccess("Notes updated", updatedNotes));
   } catch (err) {
     return res.status(500).send(response.sendError(err));
   }

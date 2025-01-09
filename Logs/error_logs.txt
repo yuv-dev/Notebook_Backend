@@ -1,1 +1,3 @@
 Wed Jul 17 2024 14:54:21 GMT+0530 (India Standard Time) MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+Fri Jan 03 2025 08:47:48 GMT+0530 (India Standard Time) MongooseError: The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.
+Fri Jan 03 2025 16:48:19 GMT+0530 (India Standard Time) MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017

@@ -3,8 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { reqLogger } = require("./src/utils/logger");
+
 //important resources
-const PORT = process.env.PORT || 8000;
+  const PORT = process.env.PORT || 8000;
 const MODE = process.env.NODE_ENV || "Development";
 const HOSTNAME = process.env.HOSTNAME || "localhost";
 

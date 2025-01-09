@@ -15,8 +15,8 @@ const findOne = (queryObjectToFind) => {
   return foundNote;
 };
 
-const findById = (queryObjectToFind) => {
-  const foundNote = Notes.findOne(queryObjectToFind);
+const findById = (noteId) => {
+  const foundNote = Notes.findById(noteId);
   return foundNote;
 };
 
