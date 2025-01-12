@@ -2,7 +2,7 @@ const fs = require('fs');
 
 /**
  * @description logger is a function to create a log of any data to any file.
- * @params filepath:path o the storage file
+ * @params filepath:path to the storage file
  *         data: value to be stored in file
  * @return void
  */

@@ -1,4 +1,16 @@
 const Userservice = require("../services/usersServices");
+const response = require("../utils/response");
+
+/**
+ * Function to be implemented in userController.js:-
+ * getUser : Get user by username or email
+ * getUserById : Get user by id
+ * getAllUser :  Get all users
+ * removeUser :  Remove user by id
+ * updateUser :  Update user by id
+*/
+
+
 
 //Access by Admin
 const getAllUser = async (req, res) => {
@@ -29,7 +41,7 @@ const getUserById = async (req, res) => {
 //Mainly for ADMIN usage
 const getUser = async (req, res) => {
   let queryObjectToFind = {};
-  const keyObject = [...req.body, ...req.query, ...req.params];
+  const keyObject = {...req.body, ...req.query, ...req.params};
 
   for (let key in req.keyObject) {
     //Find user by usrname or email

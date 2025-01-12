@@ -1,6 +1,19 @@
 const Noteservice = require("../services/notesServices");
 const response = require("../utils/response");
 
+
+/**
+ * Function to be implemented in notesController.js:-
+ * addNotes : Add a new note
+ * getNotes : Get notes by filter
+ * getNotesById : Get notes by id
+ * searchNotes : Get notes by keyword
+ * updateNotes :  Update a note by id
+ * removeNotes :  Remove a note by id
+*/
+
+
+//Add a new Note
 const addNotes = async (req, res) => {
   let queryObjectToBeAddedToDb = {
     title: req.body.title,
@@ -19,10 +32,11 @@ const addNotes = async (req, res) => {
   }
 };
 
+//Get Notes by filter
 const getNotes = async (req, res) => {
   let queryObjectToFind = {};
 
-  const keyObject = [...req.body, ...req.query, ...req.params];
+  const keyObject = {...req.body, ...req.query, ...req.params};
 
   for (let key in keyObject) {
     if (key === "username") {
@@ -42,6 +56,21 @@ const getNotes = async (req, res) => {
     return res.status(500).send(response.sendError(err));
   }
 };
+
+//Get Notes by filter
+const getNoteById = async (req, res) => {
+  let noteId = req.body.id || req.query.id || req.params.id;
+
+  try {
+    const Notes = await Noteservice.findById(noteId);
+    if (Notes.length === 0)
+      return res.status(400).send(response.sendFailed("No Notes Found"));
+    return res.status(200).send(response.sendSuccess("Notes Found", Notes));
+  } catch (err) {
+    return res.status(500).send(response.sendError(err));
+  }
+};
+
 
 //Find note by keyword
 const searchNotes = async (req, res) => {
@@ -64,6 +93,8 @@ const searchNotes = async (req, res) => {
   }
 };
 
+
+//Remove Notes
 const removeNotes = async (req, res) => {
   let reqNotesId = req.body.id || req.query.id || req.params.id;
   let queryObjectToFind = { _id: reqNotesId };
@@ -78,6 +109,7 @@ const removeNotes = async (req, res) => {
     return res.status(500).send(response.sendError(err));
   }
 };
+
 
 //Update Notes
 const updateNotes = async (req, res) => {
@@ -104,6 +136,7 @@ const updateNotes = async (req, res) => {
 module.exports = {
   addNotes,
   getNotes,
+  getNoteById,
   searchNotes,
   removeNotes,
   updateNotes,
