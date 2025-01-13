@@ -1,4 +1,11 @@
 const userServices = require("../services/usersServices");
+const errorHandler = require("./errorHandler");
+const encryption = require("./encryption");
+const {
+  ADMIN_EMAIL,
+  ADMIN_USERNAME,
+  ADMIN_PASSWORD,
+} = require("../configs/superAdminConfig");
 
 /**
  * This function is used to create an SuperADMIN user and under any condition it must not be more than one.
@@ -8,12 +15,13 @@ const userServices = require("../services/usersServices");
 
 const createAdmin = async () => {
   const admin = {
-    email: "admin@notebook.com",
-    username: "ADMIN",
-    password: "final321",
+    email: ADMIN_EMAIL,
+    username: ADMIN_USERNAME,
+    password: await encryption.doEncryption(ADMIN_PASSWORD),
     name: "ADMIN",
     userType: "ADMIN",
   };
+
 
   try {
     const ifADMINExists = await userServices.find({ username: admin.username });
@@ -31,11 +39,12 @@ const createAdmin = async () => {
       }
     }
 
-    //NO SuperAdmin found. Generally for 1st run of the app 
+    //NO SuperAdmin found. Generally for 1st run of the app
     const user = await userServices.create(admin);
     console.log("new SuperAdmin Created", user);
   } catch (error) {
-    console.log("Error in creating Admin", error);
+    console.log("Error in creating SuperAdmin");
+    errorHandler(error);
   }
 };
 
