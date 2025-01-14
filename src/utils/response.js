@@ -1,7 +1,8 @@
-const { errorHandler } = require("./errorHandler");
+const errorHandler = require("./errorHandler");
 
 const sendError = (err) => {
   errorHandler(err);
+  console.log(err);
   return { success: false, error: err };
 };
 

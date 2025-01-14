@@ -38,9 +38,9 @@ app.get("/", (req, res) => {
   res.end();
 });
 
-app.use("/auth", AuthRoutes);
-app.use("/notes", notesRoutes);
-app.use("/users", usersRoutes);
+app.use("/api/auth", AuthRoutes);
+app.use("/api/notes", notesRoutes);
+app.use("/api/users", usersRoutes);
 
 //Start the server
 app.listen(PORT, () => {

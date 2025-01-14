@@ -1,6 +1,7 @@
 const userServices = require("../services/usersServices");
 const errorHandler = require("./errorHandler");
-const encryption = require("./encryption");
+const {encrypt} = require("./encryption");
+const { userType } = require("./constants");
 const {
   ADMIN_EMAIL,
   ADMIN_USERNAME,
@@ -17,11 +18,10 @@ const createAdmin = async () => {
   const admin = {
     email: ADMIN_EMAIL,
     username: ADMIN_USERNAME,
-    password: await encryption.doEncryption(ADMIN_PASSWORD),
-    name: "ADMIN",
-    userType: "ADMIN",
+    password: await encrypt(ADMIN_PASSWORD),
+    name: userType.admin,
+    userType: userType.admin,
   };
-
 
   try {
     const ifADMINExists = await userServices.find({ username: admin.username });
@@ -30,9 +30,12 @@ const createAdmin = async () => {
       console.log("SuperAdmin Exists");
       return;
     }
+
+    console.log("SuperAdmin Exists", ifADMINExists);
+
     //If more than one SuperAdmin exists due to some issues...
     if (ifADMINExists.length > 1) {
-      console.log("More than one SUperADMIN found :", ifADMINExists);
+      console.log("More than one SuperADMIN found :", ifADMINExists);
       for (let admin of ifADMINExists) {
         const deletedUser = await userServices.deleteOne(admin._id);
         console.log("Deleted ADMIN:", deletedUser);

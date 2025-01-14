@@ -1,5 +1,13 @@
 const userServices = require("../services/usersServices");
-const response = require("../utils/response");
+const {
+  sendError,
+  sendSuccess,
+  sendFailed,
+  sendSigninSuccess,
+} = require("../utils/response");
+const jwt = require("jsonwebtoken");
+const { Secret_Key } = require("../configs/authConfig");
+const { encrypt, compare } = require("../utils/encryption");
 
 /**
  * Create new User in the app
@@ -10,14 +18,14 @@ const signup = async (req, res) => {
     name: req.body.name,
     username: req.body.username || req.body.email,
     email: req.body.email,
-    password: req.body.password,
+    password: await encrypt(req.body.password),
   };
 
   try {
     const newUser = await userServices.create(userObjectToCreateInDB);
-    res.status(201).response.sendSuccess("User created successfully", newUser);
+    res.status(201).send(sendSuccess("User created successfully", newUser));
   } catch (error) {
-    res.status(500).response.sendError("Error creating user", error);
+    res.status(500).send(sendError("Error creating user", error));
   }
 };
 
@@ -25,14 +33,28 @@ const signup = async (req, res) => {
 const signin = async (req, res) => {
   const userObjectToLogin = {
     username: req.body.username,
-    email: req.body.email,
   };
 
   try {
-    const user = await userServices.find(userObjectToLogin);
-    res.status(200).response.success("User logged in successfully", user);
+    const user = await userServices.findOne(userObjectToLogin);
+    if (!user) {
+      return res.status(404).send(sendFailed("User not found"));
+    }
+    const isPasswordValid = req.body.password === user.password;
+    if (!isPasswordValid) {
+      return res.status(401).send(sendFailed("Invalid password"));
+    }
+    const token = jwt.sign(
+      { id: user._id, username: user.username },
+      Secret_Key,
+      { expiresIn: 86400 }
+    );
+    console.log(token);
+    res
+      .status(200)
+      .send(sendSigninSuccess("User logged in successfully", user, token));
   } catch (error) {
-    res.status(500).response.error("Error logging in", error);
+    res.status(500).send(sendError("Error logging in", error));
   }
 };
 

@@ -1,6 +1,6 @@
 const {errorLogger} = require('./logger');
 
-const errorHandler = (err)=>{
+const errorHandler = (err) =>{
     console.log(err);
     errorLogger(err);
 }
