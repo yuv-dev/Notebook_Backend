@@ -12,8 +12,14 @@ const find = (queryObjectToFind) => {
 
 const findOne = (queryObjectToFind) => {
   const foundUser = User.findOne(queryObjectToFind);
-  return foundUser;
+  return foundUser;  
 };
+
+const findByEmailorUsername = ({email, username}) => {
+  const queryObjectToFind = { $or: [{ email }, { username}] };
+  const foundUser = User.findOne(queryObjectToFind);
+  return foundUser;
+}
 
 const findById = (userId) => {
   const foundUser = User.findById(userId);
@@ -39,4 +45,5 @@ module.exports = {
   findById,
   deleteOne,
   update,
+  findByEmailorUsername
 };

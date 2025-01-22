@@ -32,7 +32,7 @@ const signup = async (req, res) => {
 //Login into the app
 const signin = async (req, res) => {
   const userObjectToLogin = {
-    username: req.body.username,
+    $or: [{ username: req.body.username }, { email: req.body.email }],
   };
 
   try {
@@ -40,16 +40,15 @@ const signin = async (req, res) => {
     if (!user) {
       return res.status(404).send(sendFailed("User not found"));
     }
-    const isPasswordValid = req.body.password === user.password;
-    if (!isPasswordValid) {
+    const isPasswordValid = compare(req.body.password, user.password) ;
+     if (!isPasswordValid) {
       return res.status(401).send(sendFailed("Invalid password"));
     }
     const token = jwt.sign(
-      { id: user._id, username: user.username },
+      { userId : user._id, username: user.username, userType : user.userType },
       Secret_Key,
       { expiresIn: 86400 }
-    );
-    console.log(token);
+    );   
     res
       .status(200)
       .send(sendSigninSuccess("User logged in successfully", user, token));

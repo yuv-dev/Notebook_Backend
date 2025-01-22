@@ -31,8 +31,6 @@ const createAdmin = async () => {
       return;
     }
 
-    console.log("SuperAdmin Exists", ifADMINExists);
-
     //If more than one SuperAdmin exists due to some issues...
     if (ifADMINExists.length > 1) {
       console.log("More than one SuperADMIN found :", ifADMINExists);

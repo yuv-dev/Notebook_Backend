@@ -42,12 +42,11 @@ const getUserById = async (req, res) => {
 const getUser = async (req, res) => {
   let queryObjectToFind = {};
   const keyObject = {...req.body, ...req.query, ...req.params};
-
-  for (let key in req.keyObject) {
-    //Find user by usrname or email
-    queryObjectToFind[key] = req.body[key];
+  console.log(keyObject);
+  for (let key in keyObject) {
+    //Make the query case insensitive
+    queryObjectToFind[key] = { $regex: new RegExp(`^${keyObject[key]}$`), $options: "i" } ;
   }
-
   try {
     const Users = await Userservice.find(queryObjectToFind);
     if (Users.length === 0)
@@ -89,6 +88,11 @@ const updateUser = async (req, res) => {
         User.username = req.body.username || User.username;
         User.email = req.body.email || User.email;
         User.password = req.body.password || User.password;
+        
+        //Only if user is admin
+        User.userType = req.body.userType || User.userType;
+        
+
         const updatedUser = await User.save();
         return res
           .status(200)

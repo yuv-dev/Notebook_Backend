@@ -1,14 +1,16 @@
 const bcrypt = require("bcrypt");
+const { SALT_ROUNDS } = require("../configs/authConfig");
 
-const encrypt = async (plainText) => {
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(plainText, salt);
+const encrypt = (plainText) => {
+  const salt =  bcrypt.genSaltSync(SALT_ROUNDS);
+  const hash =  bcrypt.hashSync(plainText, salt);
   return hash;
 }
 
-const compare = async (password, hash) => {
-  return await bcrypt.compare(password, hash);
+const compare =  (password, hash) => {
+  return bcrypt.compareSync(password, hash);
 }
+
 
 
 module.exports = { encrypt, compare };

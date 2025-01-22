@@ -2,7 +2,6 @@ const errorHandler = require("./errorHandler");
 
 const sendError = (err) => {
   errorHandler(err);
-  console.log(err);
   return { success: false, error: err };
 };
 
@@ -18,4 +17,4 @@ const sendSigninSuccess = (message, data, token) => {
   return { success: true, message: message, data: data, accesstoken: token };
 };
 
-module.exports = { sendError, sendSuccess, sendSigninSuccess, sendFailed };
+module.exports = { sendError, sendSuccess, sendSigninSuccess, sendFailed: sendFailed };
