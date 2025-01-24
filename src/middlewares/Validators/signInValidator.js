@@ -14,7 +14,6 @@ const PasswordValidator = () =>
 const UsernameValidator = () =>
   check("username").trim().notEmpty().withMessage("Username not provided");
 
-
 /**
  * Validate the user sign in data
  * @returns {Object} - Returns a promise that resolves to an object of validation checks
@@ -27,7 +26,7 @@ const validateUserSignInData = [
     const errors = validationResult(req);
     const validatorErrorsFields = {};
     if (!errors.isEmpty()) {
-      for (let err of errors.array()) {  
+      for (let err of errors.array()) {
         validatorErrorsFields[err.path] = true;
       }
 
@@ -37,7 +36,6 @@ const validateUserSignInData = [
           .send(sendFailed("No email or username provided"));
       }
       if (validatorErrorsFields["password"] === true) {
-        console.log("Password not provided");
         return res.status(400).send(sendFailed("Password Not Provided"));
       }
     }

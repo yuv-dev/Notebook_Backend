@@ -16,9 +16,13 @@ const noteSchema = new mongoose.Schema(
       enum: [constants.tag.general, constants.tag.urgent, constants.tag.personal, constants.tag.reminder ],
       default: constants.tag.general,
     },
-    username: {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"User"
+    },
+    username:{
       type: String,
-      required: true,
+      required: true
     },
     date: {
       type: String,

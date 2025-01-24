@@ -1,4 +1,5 @@
 const Userservice = require("../services/usersServices");
+const { encrypt } = require("../utils/encryption");
 const response = require("../utils/response");
 
 /**
@@ -8,9 +9,7 @@ const response = require("../utils/response");
  * getAllUser :  Get all users
  * removeUser :  Remove user by id
  * updateUser :  Update user by id
-*/
-
-
+ */
 
 //Access by Admin
 const getAllUser = async (req, res) => {
@@ -41,12 +40,18 @@ const getUserById = async (req, res) => {
 //Mainly for ADMIN usage
 const getUser = async (req, res) => {
   let queryObjectToFind = {};
-  const keyObject = {...req.body, ...req.query, ...req.params};
-  console.log(keyObject);
+  const keyObject = { ...req.body, ...req.query, ...req.params };
   for (let key in keyObject) {
     //Make the query case insensitive
-    queryObjectToFind[key] = { $regex: new RegExp(`^${keyObject[key]}$`), $options: "i" } ;
+    console.log("key", key, keyObject[key]);
+    if (key !== "password") {
+      queryObjectToFind[key] = {
+        $regex: new RegExp(`^${keyObject[key]}$`),
+        $options: "i",
+      };
+    }
   }
+  console.log("queryObjectToFind", queryObjectToFind);
   try {
     const Users = await Userservice.find(queryObjectToFind);
     if (Users.length === 0)
@@ -59,47 +64,46 @@ const getUser = async (req, res) => {
 
 //Remove user by id
 const removeUser = async (req, res) => {
-    let reqUserId = req.body.id || req.query.id || req.params.id;
-      let queryObjectToFind = { _id: reqUserId };
-    
-      try {
-        const User = await Userservice.deleteOne(queryObjectToFind);
-        if (!User)
-          return res.status(400).send(response.sendFailed("User doesn't Exist"));
-    
-        return res.status(200).send(response.sendSuccess("User Deleted", User));
-      } catch (err) {
-        return res.status(500).send(response.sendError(err));
-      }
+  let reqUserId = req.body.id || req.query.id || req.params.id;
+  let queryObjectToFind = { _id: reqUserId };
+
+  try {
+    const User = await Userservice.deleteOne(queryObjectToFind);
+    if (!User)
+      return res.status(400).send(response.sendFailed("User doesn't Exist"));
+
+    return res.status(200).send(response.sendSuccess("User Deleted", User));
+  } catch (err) {
+    return res.status(500).send(response.sendError(err));
+  }
 };
 
 //Update user by id
 const updateUser = async (req, res) => {
-     let reqUserId = req.body.id || req.query.id || req.params.id;
-      let queryObjectToFind = { _id: reqUserId };
-    
-      try {
-        const User = await Userservice.findById(queryObjectToFind);
-        if (!User) {
-          return res.status(400).send(response.sendFailed("User doesn't Exist"));
-        }
+  let reqUserId = req.body.id || req.query.id || req.params.id;
+  let queryObjectToFind = { _id: reqUserId };
 
-        User.name = req.body.name || User.name;
-        User.username = req.body.username || User.username;
-        User.email = req.body.email || User.email;
-        User.password = req.body.password || User.password;
-        
-        //Only if user is admin
-        User.userType = req.body.userType || User.userType;
-        
+  try {
+    const User = await Userservice.findById(queryObjectToFind);
+    if (!User) {
+      return res.status(400).send(response.sendFailed("User doesn't Exist"));
+    }
 
-        const updatedUser = await User.save();
-        return res
-          .status(200)
-          .send(response.sendSuccess("User details updated", updatedUser));
-      } catch (err) {
-        return res.status(500).send(response.sendError(err));
-      }
+    User.name = req.body.name || User.name;
+    User.username = req.body.username || User.username;
+    User.email = req.body.email || User.email;
+    User.password = encrypt(req.body.password) || User.password;
+
+    //Only if user is admin
+    User.userType = req.body.userType || User.userType;
+
+    const updatedUser = await User.save();
+    return res
+      .status(200)
+      .send(response.sendSuccess("User details updated", updatedUser));
+  } catch (err) {
+    return res.status(500).send(response.sendError(err));
+  }
 };
 
 module.exports = {

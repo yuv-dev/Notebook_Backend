@@ -62,3 +62,42 @@ Thu Jan 16 2025 16:16:23 GMT+0530 (India Standard Time) Error creating user
 Thu Jan 16 2025 23:48:07 GMT+0530 (India Standard Time) Error creating user
 Thu Jan 16 2025 23:53:25 GMT+0530 (India Standard Time) Error creating user
 Thu Jan 16 2025 23:54:59 GMT+0530 (India Standard Time) Error creating user
+Thu Jan 23 2025 17:05:23 GMT+0530 (India Standard Time) CastError: Cast to string failed for value "{ '$regex': /^||$/, '$options': 'i' }" (type Object) at path "username" for model "User"
+Thu Jan 23 2025 17:06:20 GMT+0530 (India Standard Time) CastError: Cast to string failed for value "{ '$regex': /^admin$/, '$options': 'i' }" (type Object) at path "username" for model "User"
+Thu Jan 23 2025 17:06:30 GMT+0530 (India Standard Time) CastError: Cast to string failed for value "{ '$regex': /^ADMIN$/, '$options': 'i' }" (type Object) at path "username" for model "User"
+Thu Jan 23 2025 22:21:48 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:22:45 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:22:47 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:23:07 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:23:41 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:23:42 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:23:43 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:23:43 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:23:43 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:23:44 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "search" (type string) at path "_id" for model "note"
+Thu Jan 23 2025 22:41:49 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'length')
+Thu Jan 23 2025 22:41:54 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'length')
+Thu Jan 23 2025 22:41:55 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'length')
+Thu Jan 23 2025 22:41:55 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'length')
+Thu Jan 23 2025 22:41:55 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'length')
+Thu Jan 23 2025 22:41:55 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'length')
+Fri Jan 24 2025 14:26:58 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 14:27:07 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 16:15:17 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 16:15:19 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 16:15:21 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 16:16:26 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 16:17:06 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:24:52 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:25:08 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:25:10 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:33:39 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "67938df5284330d6e7f238c" (type string) at path "_id" for model "note"
+Fri Jan 24 2025 18:35:24 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:35:26 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:35:26 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:35:27 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:35:49 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:35:53 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:36:18 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')
+Fri Jan 24 2025 18:38:47 GMT+0530 (India Standard Time) CastError: Cast to ObjectId failed for value "`if (Note === null) return res.status(400).send(response.sendFailed("Notes doesn't Exist"));`" (type string) at path "_id" for model "note"
+Fri Jan 24 2025 18:40:41 GMT+0530 (India Standard Time) TypeError: Cannot read properties of null (reading 'user')

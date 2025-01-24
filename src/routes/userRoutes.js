@@ -6,8 +6,9 @@ const { authenticate } = require("../middlewares/authentication");
 const {verifyUser, isAdmin} = require("../middlewares/authorization");
 //Routes for user CRUD operations
 
-/**
- * All the routes here are protected and only accessible to admin users.
+/** 
+ * All the routes here are protected and only accessible to admin
+ * some of the routes are accessible to the user itself   
  */
 
 router.get("/all/", authenticate, isAdmin, UserController.getAllUser);
