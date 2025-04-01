@@ -1,6 +1,7 @@
 const Noteservice = require("../services/notesServices");
 const response = require("../utils/response");
 const { userType } = require("../utils/constants");
+const { v4: uuidv4 } = require("uuid");
 
 /**
  * Function to be implemented in notesController.js:-
@@ -15,13 +16,14 @@ const { userType } = require("../utils/constants");
 //Add a new Note
 const addNotes = async (req, res) => {
   let queryObjectToBeAddedToDb = {
-    title: req.body.title,
-    description: req.body.description,
+    title: req.body.title || "",
+    description: req.body.description || "",
     tag: req.body.tag,
     user: req.userId,
-    username: req.username,
+    username: req.username || userType.admin,
+    shareId: uuidv4(), // Generate unique shareId
   };
-
+  console.log("noteCOntroller", queryObjectToBeAddedToDb);
   try {
     const Notes = await Noteservice.create(queryObjectToBeAddedToDb);
     return res
@@ -58,7 +60,6 @@ const getNotes = async (req, res) => {
 
   const keyObject = { ...req.body, ...req.query, ...req.params };
 
-  console.log(keyObject);
   for (let key in keyObject) {
     if (key === "user" || key === "username") {
       //This conditon will ensure that regex doesnt work on username and other users cant get differernt users data
@@ -68,11 +69,11 @@ const getNotes = async (req, res) => {
       queryObjectToFind[key] = { $regex: req.body[key], $options: "i" };
     }
   }
-  console.log(queryObjectToFind);
+  // console.log(queryObjectToFind);
   try {
     const Notes = await Noteservice.find(queryObjectToFind);
-    if (Notes.length === 0)
-      return res.status(400).send(response.sendFailed("No Notes Found"));
+    // if (Notes.length === 0)
+    // return res.status(400).send(response.sendFailed("No Notes Found"));
     return res.status(200).send(response.sendSuccess("Notes Found", Notes));
   } catch (err) {
     return res.status(500).send(response.sendError(err));
@@ -101,16 +102,40 @@ const getNotesByTag = async (req, res) => {
  */
 const getNoteById = async (req, res) => {
   let noteId = req.body.id || req.query.id || req.params.id;
-  
+
   ///Here there is a issue .ANy user can access the data if he has he id of the note
   try {
     const Note = await Noteservice.findById(noteId);
     if (Note === null)
       return res.status(400).send(response.sendFailed("No Note Found"));
-       
-    if (Note.user.toString() !== req.userId && req.userType !== userType.admin) {
+
+    if (
+      Note.user.toString() !== req.userId &&
+      req.userType !== userType.admin
+    ) {
       return res.status(401).send(response.sendFailed("Unauthorized Access"));
     }
+    return res.status(200).send(response.sendSuccess("Note Found", Note));
+  } catch (err) {
+    return res.status(500).send(response.sendError(err));
+  }
+};
+
+/**
+ * Get Notes by id
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+const getNoteByShareId = async (req, res) => {
+  let SearchQueryObj = { shareId: req.params.shareId };
+
+  ///Here there is a issue .ANy user can access the data if he has he id of the note
+  try {
+    const Note = await Noteservice.findOne(SearchQueryObj);
+    if (!Note)
+      return res.status(400).send(response.sendFailed("Note not Found"));
+
     return res.status(200).send(response.sendSuccess("Note Found", Note));
   } catch (err) {
     return res.status(500).send(response.sendError(err));
@@ -145,8 +170,6 @@ const searchNotes = async (req, res) => {
   }
 };
 
-
-
 /**
  * Remove Notes
  * @param {*} req
@@ -155,27 +178,32 @@ const searchNotes = async (req, res) => {
  */
 const removeNotes = async (req, res) => {
   const reqNotesId = req.body.id || req.query.id || req.params.id;
-  const queryObjectToFind = { _id: reqNotesId };
-  //To make that only the user other than ADMIN who created the note can delete it
-  if(req.userType !== userType.admin){
-    queryObjectToFind.user = req.userId;
-  }
+
+  // To make sure that other than ADMIN only the user  who created the note can delete it
+  // if(req.userType !== userType.admin){
+  //   queryObjectToFind.user = req.userId;
+  // }
 
   //Here the issue is that any user can delete the note if he has the id of the note
   try {
     const Note = await Noteservice.findById(reqNotesId);
+    // const Note = await Noteservice.findOne(queryObjectToFind);
+    // console.log("Note", Note);
+    if (
+      Note.user.toString() !== req.userId &&
+      req.userType !== userType.admin
+    ) {
+      return res.status(401).send(response.sendFailed("Unauthorized Access"));
+    }
     if (Note === null)
       return res.status(400).send(response.sendFailed("Notes doesn't Exist"));
 
-    console.log("Note",Note)  
-    if (Note.user.toString() !== req.userId && req.userType !== userType.admin) {
-      return res.status(401).send(response.sendFailed("Unauthorized Access"));
-    }
-    const deletedNote = await Noteservice.deleteOne(queryObjectToFind);
-    console.log(deletedNote)
-    
-   
-    return res.status(200).send(response.sendSuccess("Note Deleted", deletedNote));
+    const deletedNote = await Noteservice.deleteOne(reqNotesId);
+    console.log("deletedNote", deletedNote);
+
+    return res
+      .status(200)
+      .send(response.sendSuccess("Note Deleted", deletedNote));
   } catch (err) {
     return res.status(500).send(response.sendError(err));
   }
@@ -192,12 +220,16 @@ const updateNotes = async (req, res) => {
 
   try {
     const Note = await Noteservice.findById(reqNotesId);
+
+    if (
+      Note.user.toString() !== req.userId &&
+      req.userType !== userType.admin
+    ) {
+      return res.status(401).send(response.sendFailed("Unauthorized Access"));
+    }
+
     if (!Note) {
       return res.status(400).send(response.sendFailed("Notes doesn't Exist"));
-    }
-    
-    if (Note.user.toString() !== req.userId && req.userType !== userType.admin) {
-      return res.status(401).send(response.sendFailed("Unauthorized Access"));
     }
 
     Note.title = req.body.title || Note.title;
@@ -221,4 +253,5 @@ module.exports = {
   searchNotes,
   removeNotes,
   updateNotes,
+  getNoteByShareId
 };

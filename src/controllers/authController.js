@@ -1,7 +1,6 @@
 const userServices = require("../services/usersServices");
 const {
   sendError,
-  sendSuccess,
   sendFailed,
   sendSigninSuccess,
 } = require("../utils/response");
@@ -23,7 +22,12 @@ const signup = async (req, res) => {
 
   try {
     const newUser = await userServices.create(userObjectToCreateInDB);
-    res.status(201).send(sendSuccess("User created successfully", newUser));
+    const token = jwt.sign(
+      { userId : newUser._id, username: newUser.username, userType : newUser.userType },
+      Secret_Key,
+      { expiresIn: 86400 }
+    );
+    res.status(201).send(sendSigninSuccess("User created successfully", newUser, token));
   } catch (error) {
     res.status(500).send(sendError("Error creating user", error));
   }
@@ -32,7 +36,7 @@ const signup = async (req, res) => {
 //Login into the app
 const signin = async (req, res) => {
   const userObjectToLogin = {
-    $or: [{ username: req.body.username }, { email: req.body.email }],
+    $or: [{ username: req.body.email }, { email: req.body.email }],
   };
 
   try {

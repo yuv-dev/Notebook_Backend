@@ -27,11 +27,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    Date: {
-      type: Date,
-      immutable: true,
-      default: () => Date.now(),
-    },
     userType: {
       type: String,
       enum: [constants.userType.customer, constants.userType.admin],

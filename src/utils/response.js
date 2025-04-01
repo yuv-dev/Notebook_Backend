@@ -14,7 +14,7 @@ const sendFailed = (message) => {
 };
 
 const sendSigninSuccess = (message, data, token) => {
-  return { success: true, message: message, data: data, accesstoken: token };
+  return { success: true, message: message, data: data, token: token };
 };
 
 module.exports = { sendError, sendSuccess, sendSigninSuccess, sendFailed: sendFailed };

@@ -1,4 +1,4 @@
-const Notes = require("../models/notesModel");
+const Notes = require("../models/noteModel");
 
 const create = (queryObjectToBeAddedToDb) => {
   const newNotes = Notes.create(queryObjectToBeAddedToDb);
@@ -6,7 +6,7 @@ const create = (queryObjectToBeAddedToDb) => {
 };
 
 const find = (queryObjectToFind) => {
-  const foundNotes = Notes.find(queryObjectToFind);
+  const foundNotes = Notes.find(queryObjectToFind).sort({updatedAt:-1});
   return foundNotes;
 };
 
@@ -20,8 +20,8 @@ const findById = (noteId) => {
   return foundNote;
 };
 
-const deleteOne = (queryObjectToFind) => {
-  const deletedNote = Notes.findOneAndDelete(queryObjectToFind);
+const deleteOne = (noteId) => {
+  const deletedNote = Notes.findByIdAndDelete(noteId);
   return deletedNote;
 };
 

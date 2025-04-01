@@ -27,6 +27,15 @@ app.use(reqLogger);
 connectDB();
 createAdmin();  
 
+//check all notes
+// const services = require('./src/services/notesServices');
+// const nnoteFunc = async () =>{
+//   const notesX = await services.find();
+//   console.log(notesX);
+
+// } 
+// nnoteFunc();
+
 //Check server status
 app.get("/", (req, res) => {
   console.log("App Connected");
