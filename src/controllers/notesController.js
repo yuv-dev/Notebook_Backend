@@ -26,6 +26,7 @@ const addNotes = async (req, res) => {
   console.log("noteCOntroller", queryObjectToBeAddedToDb);
   try {
     const Notes = await Noteservice.create(queryObjectToBeAddedToDb);
+    console.log(Notes);
     return res
       .status(201)
       .send(response.sendSuccess("Notes Added Succesfully", Notes));
@@ -235,6 +236,7 @@ const updateNotes = async (req, res) => {
     Note.title = req.body.title || Note.title;
     Note.description = req.body.description || Note.description;
     Note.tag = req.body.tag || Note.tag;
+    Note.isLock = req.body.isLock || Note.isLock;
     const updatedNote = await Note.save();
     return res
       .status(200)

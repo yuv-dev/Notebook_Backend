@@ -11,7 +11,8 @@ const {verifyUser, isAdmin} = require("../middlewares/authorization");
  * some of the routes are accessible to the user itself   
  */
 
-router.get("/all/", UserController.getAllUser);
+router.post("/verify-master-password/", authenticate, UserController.verifyMasterPassword);
+router.get("/all/",authenticate, isAdmin, UserController.getAllUser);
 router.get("/:id", authenticate, verifyUser, UserController.getUserById);
 router.get("/", authenticate, isAdmin, UserController.getUser);
 router.put("/:id",authenticate,verifyUser,  UserController.updateUser);

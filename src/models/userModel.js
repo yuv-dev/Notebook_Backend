@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    noteMasterPassword: { type: String, default: null }, // Store password (hashed)
+
     userType: {
       type: String,
       enum: [constants.userType.customer, constants.userType.admin],

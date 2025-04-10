@@ -1,5 +1,5 @@
 const Userservice = require("../services/usersServices");
-const { encrypt } = require("../utils/encryption");
+const { encrypt, compare } = require("../utils/encryption");
 const response = require("../utils/response");
 
 /**
@@ -80,20 +80,22 @@ const removeUser = async (req, res) => {
 
 //Update user by id
 const updateUser = async (req, res) => {
-  let reqUserId = req.body.id || req.query.id || req.params.id;
-  let queryObjectToFind = { _id: reqUserId };
-
   try {
-    const User = await Userservice.findById(queryObjectToFind);
+    const User = await Userservice.findById(req.userId);
     if (!User) {
       return res.status(400).send(response.sendFailed("User doesn't Exist"));
     }
-
     User.name = req.body.name || User.name;
     User.username = req.body.username || User.username;
     User.email = req.body.email || User.email;
-    User.password = encrypt(req.body.password) || User.password;
+    User.password = req.body.password
+      ? encrypt(req.body.password)
+      : User.password;
 
+    User.noteMasterPassword =
+      req.body.noteMasterPassword.length > 0
+        ? encrypt(req.body.noteMasterPassword)
+        : null;
     //Only if user is admin
     User.userType = req.body.userType || User.userType;
 
@@ -106,10 +108,33 @@ const updateUser = async (req, res) => {
   }
 };
 
+//Verify the master password
+const verifyMasterPassword = async (req, res) => {
+  console.log("verifyMasterPassword");
+  console.log(req.body);
+  console.log("oldPassword", req.body.password);
+  console.log(req.userId);
+  try {
+    const User = await Userservice.findById(req.userId);
+    console.log("user:", User);
+    if (!User)
+      return res.status(400).send(response.sendFailed("User NOT Found"));
+
+    //Compare the passwords
+    const isMatch = compare(req.body.password, User.noteMasterPassword);
+
+    console.log("isMatch", isMatch);
+    return res.status(200).json({ verified: isMatch });
+  } catch {
+    return res.status(500).json({ error: "Verification Failed" });
+  }
+};
+
 module.exports = {
   getUser,
   getUserById,
   getAllUser,
   removeUser,
   updateUser,
+  verifyMasterPassword,
 };

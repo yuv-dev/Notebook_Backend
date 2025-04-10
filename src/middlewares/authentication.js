@@ -3,7 +3,7 @@ const { sendFailed } = require("../utils/response");
 const { Secret_Key } = require("../configs/authConfig");
 
 const authenticate = (req, res, next) => {
-  const token = req.headers["authorization"].split(" ")[1] || null;
+  const token = req.headers["authorization"]?.split(" ")[1] || null;
   if (!token) {
     return res.status(401).send(sendFailed("Access denied. No token provided"));
   }

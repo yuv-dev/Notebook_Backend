@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-const constants = require('../utils/constants');
+const constants = require("../utils/constants");
 
 const noteSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     description: {
       type: String,
@@ -13,17 +13,27 @@ const noteSchema = new mongoose.Schema(
     },
     tag: {
       type: String,
-      enum: [constants.tag.general, constants.tag.urgent, constants.tag.personal, constants.tag.reminder ],
+      enum: [
+        constants.tag.general,
+        constants.tag.urgent,
+        constants.tag.personal,
+        constants.tag.reminder,
+      ],
       default: constants.tag.general,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref:"User"
+      ref: "User",
     },
-    username:{
+    username: {
       type: String,
-      required: true
+      required: true,
     },
+    isLock:{
+      type:Boolean,
+      default:false
+    },
+
     date: {
       type: String,
       default: Date.now(),
